@@ -2,7 +2,7 @@
     <PropertyGroup>
         <LangVersion>10</LangVersion>
         <Version>1.2.0.11</Version>
-        <AssemblyName>InventoryTools</AssemblyName>
+        <AssemblyName>InventoryToolsCN</AssemblyName>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
