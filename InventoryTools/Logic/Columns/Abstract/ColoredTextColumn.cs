@@ -237,21 +237,26 @@ namespace InventoryTools.Logic.Columns.Abstract
             FilterConfiguration filterConfiguration, ColumnConfiguration columnConfiguration)
         {
             ImGui.TableNextColumn();
-            if (currentValue.HasValue)
-            {
-                if (filterConfiguration.FilterType == Logic.FilterType.CraftFilter)
+            if (ImGui.TableGetColumnFlags().HasFlag(ImGuiTableColumnFlags.IsEnabled)) {
+                if (currentValue.HasValue)
                 {
-                    ImGuiUtil.VerticalAlignTextColored(currentValue.Value.Item1, currentValue.Value.Item2, filterConfiguration.TableHeight, true);
+                    if (filterConfiguration.FilterType == Logic.FilterType.CraftFilter)
+                    {
+                        ImGuiUtil.VerticalAlignTextColored(currentValue.Value.Item1, currentValue.Value.Item2,
+                            filterConfiguration.TableHeight, true);
+                    }
+                    else
+                    {
+                        ImGuiUtil.VerticalAlignTextColored(currentValue.Value.Item1, currentValue.Value.Item2,
+                            filterConfiguration.TableHeight, false);
+                    }
                 }
                 else
                 {
-                    ImGuiUtil.VerticalAlignTextColored(currentValue.Value.Item1, currentValue.Value.Item2, filterConfiguration.TableHeight, false);
+                    ImGui.Text(EmptyText);
                 }
             }
-            else
-            {
-                ImGui.Text(EmptyText);
-            }
+
             return null;
         }
 

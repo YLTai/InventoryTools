@@ -27,12 +27,18 @@ namespace InventoryTools.Logic.Columns
             if (currentValue.HasValue && currentValue.Value.Item1 == Loading)
             {
                 ImGui.TableNextColumn();
-                ImGui.TextColored(ImGuiColors.DalamudYellow, LoadingString);
+                if (ImGui.TableGetColumnFlags().HasFlag(ImGuiTableColumnFlags.IsEnabled))
+                {
+                    ImGui.TextColored(ImGuiColors.DalamudYellow, LoadingString);
+                }
             }
             else if (currentValue.HasValue && currentValue.Value.Item1 == Untradable)
             {
                 ImGui.TableNextColumn();
-                ImGui.TextColored(ImGuiColors.DalamudRed, UntradableString);
+                if (ImGui.TableGetColumnFlags().HasFlag(ImGuiTableColumnFlags.IsEnabled))
+                {
+                    ImGui.TextColored(ImGuiColors.DalamudRed, UntradableString);
+                }
             }
             else if(currentValue.HasValue)
             {

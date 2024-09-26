@@ -43,30 +43,35 @@ namespace InventoryTools.Logic.Columns
             CraftItem item, int rowIndex, int columnIndex)
         {
             ImGui.TableNextColumn();
-            if (CurrentValue(columnConfiguration, item) > 0)
+            if (ImGui.TableGetColumnFlags().HasFlag(ImGuiTableColumnFlags.IsEnabled))
             {
-                ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.ParsedBlue);
-            }
-
-            var currentValue = CurrentValue(columnConfiguration, item);
-            if (currentValue != null)
-            {
-                var fmt = $"{currentValue.Value:n0}";
-                if (item.Yield > 1)
+                if (CurrentValue(columnConfiguration, item) > 0)
                 {
-                    fmt += " (" + item.Yield + ")";
+                    ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.ParsedBlue);
                 }
-                ImGuiUtil.VerticalAlignText(fmt, configuration.TableHeight, false);
-            }
-            else
-            {
-                ImGuiUtil.VerticalAlignText(EmptyText, configuration.TableHeight, false);
+
+                var currentValue = CurrentValue(columnConfiguration, item);
+                if (currentValue != null)
+                {
+                    var fmt = $"{currentValue.Value:n0}";
+                    if (item.Yield > 1)
+                    {
+                        fmt += " (" + item.Yield + ")";
+                    }
+
+                    ImGuiUtil.VerticalAlignText(fmt, configuration.TableHeight, false);
+                }
+                else
+                {
+                    ImGuiUtil.VerticalAlignText(EmptyText, configuration.TableHeight, false);
+                }
+
+                if (CurrentValue(columnConfiguration, item) > 0)
+                {
+                    ImGui.PopStyleColor();
+                }
             }
 
-            if (CurrentValue(columnConfiguration, item) > 0)
-            {
-                ImGui.PopStyleColor();
-            }
             return null;
         }
 

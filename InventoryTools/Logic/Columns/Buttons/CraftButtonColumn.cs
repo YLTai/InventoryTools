@@ -10,10 +10,12 @@ namespace InventoryTools.Logic.Columns.Buttons;
 public class CraftButtonColumn : ButtonColumn
 {
     private readonly IGameInterface _gameInterface;
+    private readonly IChatUtilities _chatUtilities;
 
-    public CraftButtonColumn(IGameInterface gameInterface)
+    public CraftButtonColumn(IGameInterface gameInterface, IChatUtilities chatUtilities)
     {
         _gameInterface = gameInterface;
+        _chatUtilities = chatUtilities;
     }
     public override string Name { get; set; } = "Craft Button";
     public override float Width { get; set; } = 80;
@@ -23,9 +25,16 @@ public class CraftButtonColumn : ButtonColumn
         ItemEx item, int rowIndex, int columnIndex)
     {
         ImGui.TableNextColumn();
-        if (item.CanBeCrafted && ImGui.Button("Craft"))
+        if (ImGui.TableGetColumnFlags().HasFlag(ImGuiTableColumnFlags.IsEnabled))
         {
-            _gameInterface.OpenCraftingLog(item.RowId);
+            if (item.CanBeCrafted && ImGui.Button("Craft##" + rowIndex + "_" + columnIndex))
+            {
+                var result = _gameInterface.OpenCraftingLog(item.RowId);
+                if (!result)
+                {
+                    _chatUtilities.PrintError("Could not open the crafting log, you are currently crafting.");
+                }
+            }
         }
 
         return null;

@@ -18,14 +18,18 @@ namespace InventoryTools.Logic.Columns.Abstract
             FilterConfiguration filterConfiguration, ColumnConfiguration columnConfiguration)
         {
             ImGui.TableNextColumn();
-            if (currentValue != null)
+            if (ImGui.TableGetColumnFlags().HasFlag(ImGuiTableColumnFlags.IsEnabled))
             {
-                ImGuiUtil.RightAlign($"{currentValue.Value:n0}" + SeIconChar.Gil.ToIconString());
+                if (currentValue != null)
+                {
+                    ImGuiUtil.RightAlign($"{currentValue.Value:n0}" + SeIconChar.Gil.ToIconString());
+                }
+                else
+                {
+                    ImGui.Text(EmptyText);
+                }
             }
-            else
-            {
-                ImGui.Text(EmptyText);
-            }
+
             return null;
         }
     }

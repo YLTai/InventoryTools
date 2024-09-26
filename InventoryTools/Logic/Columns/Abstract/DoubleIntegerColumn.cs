@@ -251,15 +251,19 @@ namespace InventoryTools.Logic.Columns.Abstract
             FilterConfiguration filterConfiguration, ColumnConfiguration columnConfiguration)
         {
             ImGui.TableNextColumn();
-            if (currentValue != null)
+            if (ImGui.TableGetColumnFlags().HasFlag(ImGuiTableColumnFlags.IsEnabled))
             {
-                var text = $"{currentValue.Value.Item1:n0}" + Divider + $"{currentValue.Value.Item2:n0}";
-                ImGuiUtil.VerticalAlignText(text, filterConfiguration.TableHeight, false);
+                if (currentValue != null)
+                {
+                    var text = $"{currentValue.Value.Item1:n0}" + Divider + $"{currentValue.Value.Item2:n0}";
+                    ImGuiUtil.VerticalAlignText(text, filterConfiguration.TableHeight, false);
+                }
+                else
+                {
+                    ImGuiUtil.VerticalAlignText(EmptyText, filterConfiguration.TableHeight, false);
+                }
             }
-            else
-            {
-                ImGuiUtil.VerticalAlignText(EmptyText, filterConfiguration.TableHeight, false);
-            }
+
             return null;
         }
 

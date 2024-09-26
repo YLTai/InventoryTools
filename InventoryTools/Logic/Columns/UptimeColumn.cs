@@ -33,24 +33,27 @@ public class UptimeColumn : TimeIntervalColumn
         ColumnConfiguration columnConfiguration)
     {
         ImGui.TableNextColumn();
-        if (currentValue.HasValue)
+        if (ImGui.TableGetColumnFlags().HasFlag(ImGuiTableColumnFlags.IsEnabled))
         {
-            if (currentValue.Value.Start > TimeStamp.UtcNow)
+            if (currentValue.HasValue)
             {
-                using (ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.DalamudRed))
+                if (currentValue.Value.Start > TimeStamp.UtcNow)
                 {
-                    ImGui.Text("Up in " +
-                               TimeInterval.DurationString(currentValue.Value.Start, TimeStamp.UtcNow,
-                                   true));
+                    using (ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.DalamudRed))
+                    {
+                        ImGui.Text("Up in " +
+                                   TimeInterval.DurationString(currentValue.Value.Start, TimeStamp.UtcNow,
+                                       true));
+                    }
                 }
-            }
-            else
-            {
-                using (ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.HealerGreen))
+                else
                 {
-                    ImGui.Text("Up for " +
-                               TimeInterval.DurationString(currentValue.Value.End, TimeStamp.UtcNow,
-                                   true));
+                    using (ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.HealerGreen))
+                    {
+                        ImGui.Text("Up for " +
+                                   TimeInterval.DurationString(currentValue.Value.End, TimeStamp.UtcNow,
+                                       true));
+                    }
                 }
             }
         }

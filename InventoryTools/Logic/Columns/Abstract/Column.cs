@@ -183,6 +183,11 @@ namespace InventoryTools.Logic.Columns.Abstract
                         : ImGuiTableColumnFlags.PreferSortDescending;
                 }
             }
+
+            if (columnIndex == 0)
+            {
+                imGuiTableColumnFlags |= ImGuiTableColumnFlags.NoHide;
+            }
             ImGui.TableSetupColumn(columnConfiguration.Name ?? (RenderName ?? Name), imGuiTableColumnFlags, Width, (uint)columnIndex);
         }
         public virtual IFilterEvent? DrawFooterFilter(FilterConfiguration configuration, FilterTable filterTable)
@@ -196,9 +201,11 @@ namespace InventoryTools.Logic.Columns.Abstract
             remove { }
         }
 
-        
+        public virtual void InvalidateSearchCache()
+        {
+        }
 
-        
+
         private bool _disposed;
         public virtual void Dispose()
         {

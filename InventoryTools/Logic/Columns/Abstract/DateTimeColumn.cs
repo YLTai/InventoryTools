@@ -179,19 +179,22 @@ namespace InventoryTools.Logic.Columns.Abstract
             FilterConfiguration filterConfiguration, ColumnConfiguration columnConfiguration)
         {
             ImGui.TableNextColumn();
-            if (currentValue != null)
+            if (ImGui.TableGetColumnFlags().HasFlag(ImGuiTableColumnFlags.IsEnabled))
             {
-                var formattedValue = currentValue.Value.ToString(CultureInfo.CurrentCulture);
-                var columnWidth = ImGui.GetColumnWidth();
-                var frameHeight = filterConfiguration.TableHeight / 2.0f;
-                var calcText = ImGui.CalcTextSize(formattedValue);
-                var textHeight = calcText.X >= columnWidth ? 0 : calcText.Y / 2.0f;
-                ImGui.SetCursorPosY(ImGui.GetCursorPosY() + frameHeight - textHeight);
-                ImGui.TextUnformatted(formattedValue);
-            }
-            else
-            {
-                ImGui.TextUnformatted(EmptyText);
+                if (currentValue != null)
+                {
+                    var formattedValue = currentValue.Value.ToString(CultureInfo.CurrentCulture);
+                    var columnWidth = ImGui.GetColumnWidth();
+                    var frameHeight = filterConfiguration.TableHeight / 2.0f;
+                    var calcText = ImGui.CalcTextSize(formattedValue);
+                    var textHeight = calcText.X >= columnWidth ? 0 : calcText.Y / 2.0f;
+                    ImGui.SetCursorPosY(ImGui.GetCursorPosY() + frameHeight - textHeight);
+                    ImGui.TextUnformatted(formattedValue);
+                }
+                else
+                {
+                    ImGui.TextUnformatted(EmptyText);
+                }
             }
 
             return null;

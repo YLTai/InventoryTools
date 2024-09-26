@@ -141,10 +141,16 @@ namespace InventoryTools.Logic.Columns.Abstract
             FilterConfiguration filterConfiguration, ColumnConfiguration columnConfiguration)
         {
             ImGui.TableNextColumn();
-            if (currentValue != null)
+            if (ImGui.TableGetColumnFlags().HasFlag(ImGuiTableColumnFlags.IsEnabled))
             {
-                ImGuiService.DrawIcon(currentValue.Value.Item1, new Vector2(filterConfiguration.TableHeight, filterConfiguration.TableHeight) * ImGui.GetIO().FontGlobalScale, currentValue.Value.Item2);
+                if (currentValue != null)
+                {
+                    ImGuiService.DrawIcon(currentValue.Value.Item1,
+                        new Vector2(filterConfiguration.TableHeight, filterConfiguration.TableHeight) *
+                        ImGui.GetIO().FontGlobalScale, currentValue.Value.Item2);
+                }
             }
+
             return null;
         }
 

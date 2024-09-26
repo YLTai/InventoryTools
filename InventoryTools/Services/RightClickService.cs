@@ -268,7 +268,7 @@ public class RightClickService
         }
         if (ImGui.Selectable("Open in Console Games Wiki"))
         {
-            var name = item.NameString.Replace(' ', '_');
+            var name = item.NameString.Replace("#"," ").Replace("  ", " ").Replace(' ', '_');
             name = name.Replace('–', '-');
 
             if (name.StartsWith("_")) // "level sync" icon
@@ -291,16 +291,28 @@ public class RightClickService
                 _tryOn.TryOnItem(item);
             }
         }
+        if (ImGui.Selectable("Search"))
+        {
+            messages.Add(new ItemSearchRequestedMessage(item.ItemId, InventoryItem.ItemFlags.None));
+        }
 
         if (item.CanOpenCraftLog && ImGui.Selectable("Open Crafting Log"))
         {
             if (recipeId != null)
             {
-                _gameInterface.OpenCraftingLog(item.RowId, recipeId.Value);
+                var result = _gameInterface.OpenCraftingLog(item.RowId, recipeId.Value);
+                if (!result)
+                {
+                    _chatUtilities.PrintError("Could not open the crafting log, you are currently crafting.");
+                }
             }
             else
             {
-                _gameInterface.OpenCraftingLog(item.RowId);
+                var result = _gameInterface.OpenCraftingLog(item.RowId);
+                if (!result)
+                {
+                    _chatUtilities.PrintError("Could not open the crafting log, you are currently crafting.");
+                }
             }
         }
 

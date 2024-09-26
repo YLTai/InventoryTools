@@ -7,8 +7,10 @@ using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Plugin.Services;
 using FFXIVClientStructs.FFXIV.Component.GUI;
+using InventoryTools.Logic.Editors;
 using InventoryTools.Logic.Settings;
 using Microsoft.Extensions.Logging;
+using OtterGui;
 
 namespace InventoryTools.Tooltips;
 
@@ -16,11 +18,13 @@ public class AmountOwnedTooltip : BaseTooltip
 {
     private readonly ICharacterMonitor _characterMonitor;
     private readonly IInventoryMonitor _inventoryMonitor;
+    private readonly InventoryScopeCalculator _inventoryScopeCalculator;
 
-    public AmountOwnedTooltip(ILogger<AmountOwnedTooltip> logger,ExcelCache excelCache, InventoryToolsConfiguration configuration, IGameGui gameGui, ICharacterMonitor characterMonitor, IInventoryMonitor inventoryMonitor) : base(logger, excelCache, configuration, gameGui)
+    public AmountOwnedTooltip(ILogger<AmountOwnedTooltip> logger,ExcelCache excelCache, InventoryToolsConfiguration configuration, IGameGui gameGui, ICharacterMonitor characterMonitor, IInventoryMonitor inventoryMonitor, InventoryScopeCalculator inventoryScopeCalculator) : base(logger, excelCache, configuration, gameGui)
     {
         _characterMonitor = characterMonitor;
         _inventoryMonitor = inventoryMonitor;
+        _inventoryScopeCalculator = inventoryScopeCalculator;
     }
     private const string indentation = "      ";
     
@@ -58,12 +62,35 @@ public class AmountOwnedTooltip : BaseTooltip
             {
                 if (Configuration.TooltipDisplayAmountOwned)
                 {
-                    var ownedItems = _inventoryMonitor.AllItems.Where(item => 
-                            item.ItemId == HoverItemId && 
-                            _characterMonitor.Characters.ContainsKey(item.RetainerId) &&
-                            ((Configuration.TooltipCurrentCharacter && _characterMonitor.BelongsToActiveCharacter(item.RetainerId)) ||  !Configuration.TooltipCurrentCharacter)
-                        )
+                    var sortMode = Configuration.TooltipAmountOwnedSort;
+                    
+                    var enumerable = _inventoryMonitor.AllItems.Where(item =>
+                        item.ItemId == HoverItemId &&
+                        _characterMonitor.Characters.ContainsKey(item.RetainerId) &&
+                        ((Configuration.TooltipCurrentCharacter &&
+                          _characterMonitor.BelongsToActiveCharacter(item.RetainerId)) ||
+                         !Configuration.TooltipCurrentCharacter)
+                    );
+                    if (Configuration.TooltipSearchScope != null && Configuration.TooltipSearchScope.Count != 0)
+                    {
+                        enumerable = enumerable.Where(c => _inventoryScopeCalculator.Filter(Configuration.TooltipSearchScope, c));
+                    }
+
+                    if (sortMode == TooltipAmountOwnedSort.Alphabetically)
+                    {
+                        var characterNames = _characterMonitor.Characters.OrderBy(c => c.Value.FormattedName).ToList();
+                        enumerable = enumerable.OrderBy(c => characterNames.IndexOf(d => d.Key == c.RetainerId));
+                    }
+                    else if(sortMode == TooltipAmountOwnedSort.Categorically)
+                    {
+                        var characterNames = _characterMonitor.Characters.OrderBy(c => c.Value.FormattedName).ToList();
+                        enumerable = enumerable.OrderBy(c => c.SortedCategory.FormattedName()).ThenBy(c => characterNames.IndexOf(d => d.Key == c.RetainerId));
+                    }
+                    
+                    var ownedItems = enumerable
                         .ToList();
+                    
+                    
                             
                     uint storageCount = 0;
                     List<string> locations = new List<string>();
@@ -151,7 +178,7 @@ public class AmountOwnedTooltip : BaseTooltip
                             }
 
                             var typeIcon = "";
-                            if ((oGroup.Key.Flags & FFXIVClientStructs.FFXIV.Client.Game.InventoryItem.ItemFlags.HQ) != 0)
+                            if ((oGroup.Key.Flags & FFXIVClientStructs.FFXIV.Client.Game.InventoryItem.ItemFlags.HighQuality) != 0)
                             {
                                 typeIcon = "\uE03c";
                             }
@@ -188,7 +215,7 @@ public class AmountOwnedTooltip : BaseTooltip
                             }
 
                             var typeIcon = "";
-                            if ((oGroup.Key.Flags & FFXIVClientStructs.FFXIV.Client.Game.InventoryItem.ItemFlags.HQ) != 0)
+                            if ((oGroup.Key.Flags & FFXIVClientStructs.FFXIV.Client.Game.InventoryItem.ItemFlags.HighQuality) != 0)
                             {
                                 typeIcon = "\uE03c";
                             }

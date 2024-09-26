@@ -132,7 +132,7 @@ namespace InventoryTools.Logic
                         {
                             NeedsRefresh = true;
                         }
-
+                        
                         if (FilterConfiguration.FilterType == FilterType.SearchFilter ||
                             FilterConfiguration.FilterType == FilterType.SortingFilter ||
                             FilterConfiguration.FilterType == FilterType.CraftFilter)
@@ -161,9 +161,9 @@ namespace InventoryTools.Logic
                                         {
                                             messages.AddRange(columnMessages);
                                         }
-                                        ImGui.SameLine();
-                                        if (columnIndex == Columns.Count - 1)
+                                        if (columnIndex == 0)
                                         {
+                                            ImGui.SameLine();
                                             var menuMessages = DrawMenu(FilterConfiguration, column,
                                                 item,
                                                 index);
@@ -207,9 +207,10 @@ namespace InventoryTools.Logic
                                             {
                                                 messages.AddRange(columnMessages);
                                             }
-                                            ImGui.SameLine();
-                                            if (columnIndex == Columns.Count - 1)
+
+                                            if (columnIndex == 0)
                                             {
+                                                ImGui.SameLine();
                                                 var menuMessages = DrawMenu(FilterConfiguration, column,
                                                     (ItemEx)item, index);
                                                 if (menuMessages != null)

@@ -130,13 +130,14 @@ namespace InventoryTools.Logic
                                     {
                                         var column = Columns[columnIndex];
                                         var columnMessages = column.Column.Draw(FilterConfiguration, column, item, index, columnIndex);
+
                                         if (columnMessages != null)
                                         {
                                             messages.AddRange(columnMessages);
                                         }
-                                        ImGui.SameLine();
-                                        if (columnIndex == Columns.Count - 1)
+                                        if (columnIndex == 0)
                                         {
+                                            ImGui.SameLine();
                                             var menuItems = DrawMenu(
                                                 FilterConfiguration, column,
                                                 item,
@@ -163,6 +164,7 @@ namespace InventoryTools.Logic
                         {
                             if (!table || !table.Success) return messages;
                             var refresh = false;
+
                             ImGui.TableSetupScrollFreeze(Math.Min(FreezeCols ?? 0, Columns.Count),
                                 FreezeRows ?? (ShowFilterRow ? 2 : 1));
                             for (var index = 0; index < Columns.Count; index++)
@@ -235,13 +237,14 @@ namespace InventoryTools.Logic
                                             {
                                                 var column = Columns[columnIndex];
                                                 var columnMessages = column.Column.Draw(FilterConfiguration, column, item, overallIndex, columnIndex);
+
                                                 if (columnMessages != null)
                                                 {
                                                     messages.AddRange(columnMessages);
                                                 }
-                                                ImGui.SameLine();
-                                                if (columnIndex == Columns.Count - 1)
+                                                if (columnIndex == 0)
                                                 {
+                                                    ImGui.SameLine();
                                                     var menuMessages = DrawMenu(
                                                         FilterConfiguration, column,
                                                         item,

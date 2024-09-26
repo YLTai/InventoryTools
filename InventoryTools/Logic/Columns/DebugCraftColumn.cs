@@ -36,6 +36,7 @@ namespace InventoryTools.Logic.Columns
             CraftItem item, int rowIndex, int columnIndex)
         {
             ImGui.TableNextColumn();
+            if (!ImGui.TableGetColumnFlags().HasFlag(ImGuiTableColumnFlags.IsEnabled)) return null;
             ImGui.Text("Required: " +  item.QuantityRequired);
             ImGui.Text("Needed: " +  item.QuantityNeeded);
             ImGui.Text("Needed Pre Update: " +  item.QuantityNeededPreUpdate);

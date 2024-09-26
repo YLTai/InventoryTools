@@ -102,11 +102,16 @@ namespace InventoryTools.Logic.Filters
             return value.Where(c => c.CraftOnly != false && c.AvailableInType(configuration.FilterType)).ToDictionary(c => c.GetType().Name, c => c);
         }
 
+        private FilterType? _lastFilterType;
         private List<IGrouping<ColumnCategory, KeyValuePair<string, IColumn>>>? _groupedItems;
         public List<IGrouping<ColumnCategory, KeyValuePair<string, IColumn>>> GetGroupedItems(FilterConfiguration configuration)
         {
-            var availableItems = GetAvailableItems(configuration).OrderBy(c => c.Value.Name);
-            _groupedItems = availableItems.OrderBy(c => c.Value.Name).GroupBy(c => c.Value.ColumnCategory).ToList();
+            if (_groupedItems == null || _lastFilterType == null || _lastFilterType != configuration.FilterType)
+            {
+                var availableItems = GetAvailableItems(configuration).OrderBy(c => c.Value.Name);
+                _groupedItems = availableItems.OrderBy(c => c.Value.Name).GroupBy(c => c.Value.ColumnCategory).ToList();
+                _lastFilterType = configuration.FilterType;
+            }
 
             return _groupedItems;
         }
@@ -220,14 +225,14 @@ namespace InventoryTools.Logic.Filters
                                     if (column.Value.DefaultIn.HasFlag(configuration.FilterType))
                                     {
                                         ImGui.SameLine();
-                                        ImGui.Image(ImGuiService.IconService[Icons.SproutIcon].ImGuiHandle, new Vector2(16,16));
+                                        ImGui.Image(ImGuiService.GetIconTexture(Icons.SproutIcon).ImGuiHandle, new Vector2(16,16));
                                         ImGuiUtil.HoverTooltip("Default Column");
                                     }
                                     
                                     if (column.Value.IsConfigurable)
                                     {
                                         ImGui.SameLine();
-                                        ImGui.Image(ImGuiService.IconService[Icons.WrenchIcon].ImGuiHandle, new Vector2(16,16));
+                                        ImGui.Image(ImGuiService.GetIconTexture(Icons.WrenchIcon).ImGuiHandle, new Vector2(16,16));
                                         ImGuiUtil.HoverTooltip("Configurable");
                                     }
 

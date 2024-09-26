@@ -143,19 +143,25 @@ namespace InventoryTools.Logic.Columns.Abstract
             FilterConfiguration filterConfiguration, ColumnConfiguration columnConfiguration)
         {
             ImGui.TableNextColumn();
-            if (currentValue != null)
+            if (ImGui.TableGetColumnFlags().HasFlag(ImGuiTableColumnFlags.IsEnabled))
             {
-                ImGuiService.DrawIcon(currentValue.Value.Item2, new Vector2(filterConfiguration.TableHeight, filterConfiguration.TableHeight) * ImGui.GetIO().FontGlobalScale, currentValue.Value.Item3);
-                ImGui.SameLine();
-                if (filterConfiguration.FilterType == Logic.FilterType.CraftFilter)
+                if (currentValue != null)
                 {
-                    ImGui.TextWrapped(currentValue.Value.Item1);
-                }
-                else
-                {
-                    ImGui.Text(currentValue.Value.Item1);
+                    ImGuiService.DrawIcon(currentValue.Value.Item2,
+                        new Vector2(filterConfiguration.TableHeight, filterConfiguration.TableHeight) *
+                        ImGui.GetIO().FontGlobalScale, currentValue.Value.Item3);
+                    ImGui.SameLine();
+                    if (filterConfiguration.FilterType == Logic.FilterType.CraftFilter)
+                    {
+                        ImGui.TextWrapped(currentValue.Value.Item1);
+                    }
+                    else
+                    {
+                        ImGui.Text(currentValue.Value.Item1);
+                    }
                 }
             }
+
             return null;
         }
     }

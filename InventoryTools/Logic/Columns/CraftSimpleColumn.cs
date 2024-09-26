@@ -37,13 +37,15 @@ namespace InventoryTools.Logic.Columns
             CraftItem item, int rowIndex, int columnIndex)
         {
             ImGui.TableNextColumn();
+            if (!ImGui.TableGetColumnFlags().HasFlag(ImGuiTableColumnFlags.IsEnabled)) return null;
+            var originalCursorPosY = ImGui.GetCursorPosY();
             var nextStep = configuration.CraftList.GetNextStep(item);
             ImGuiUtil.VerticalAlignTextColored(nextStep.Item2, nextStep.Item1, configuration.TableHeight, true);
             if (item.IsOutputItem && item.IsCompleted)
             {
                 ImGui.SameLine();
                 ImGui.SetCursorPosY(ImGui.GetCursorPosY() + configuration.TableHeight / 2.0f - 9);
-                ImGui.Image(ImGuiService.IconService[Icons.RedXIcon].ImGuiHandle, new Vector2(20, 20) * ImGui.GetIO().FontGlobalScale,
+                ImGui.Image(ImGuiService.GetIconTexture(Icons.RedXIcon).ImGuiHandle, new Vector2(20, 20) * ImGui.GetIO().FontGlobalScale,
                     new System.Numerics.Vector2(0, 0), new System.Numerics.Vector2(1, 1));
                 if (ImGui.IsItemHovered())
                 {
@@ -78,7 +80,7 @@ namespace InventoryTools.Logic.Columns
                             if (item.MarketUnitPrice != 0 && item.MarketUnitPrice < item.Item.BuyFromVendorPrice)
                             {
                                 ImGui.SameLine();
-                                ImGui.Image(ImGuiService.IconService[Icons.QuestionMarkIcon].ImGuiHandle, new Vector2(16, 16));
+                                ImGui.Image(ImGuiService.GetIconTexture(Icons.QuestionMarkIcon).ImGuiHandle, new Vector2(16, 16));
                                 OtterGui.ImGuiUtil.HoverTooltip(
                                     "The market price of this item is cheaper than buying it from a vendor and you prefer vendors over the current ingredient preference.");
                             }
@@ -94,7 +96,7 @@ namespace InventoryTools.Logic.Columns
                 if (craftPrices != null && craftPrices.Count != 0)
                 {
                     ImGui.SameLine();
-                    ImGui.Image(ImGuiService.IconService[Icons.MarketboardIcon].ImGuiHandle, new Vector2(16,16));
+                    ImGui.Image(ImGuiService.GetIconTexture(Icons.MarketboardIcon).ImGuiHandle, new Vector2(16,16));
                     if (ImGui.IsItemHovered(ImGuiHoveredFlags.None))
                     {
                         using (var tooltip = ImRaii.Tooltip())
@@ -129,6 +131,7 @@ namespace InventoryTools.Logic.Columns
             else if (item.MissingIngredients.Count != 0)
             {
                 ImGui.SameLine();
+                ImGui.SetCursorPosY(originalCursorPosY);
                 ImGui.PushFont(_font.IconFont);
                 ImGuiUtil.VerticalAlignTextDisabled(FontAwesomeIcon.InfoCircle.ToIconString(), configuration.TableHeight, false);
                 ImGui.PopFont();

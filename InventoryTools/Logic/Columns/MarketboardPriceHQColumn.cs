@@ -65,24 +65,17 @@ namespace InventoryTools.Logic.Columns
             if (currentValue.HasValue && currentValue.Value == Loading)
             {
                 ImGui.TableNextColumn();
-                ImGui.TextColored(ImGuiColors.DalamudYellow, LoadingString);
+                if (ImGui.TableGetColumnFlags().HasFlag(ImGuiTableColumnFlags.IsEnabled))
+                {
+                    ImGui.TextColored(ImGuiColors.DalamudYellow, LoadingString);
+                }
             }
             else if (currentValue.HasValue && currentValue.Value == Untradable)
             {
                 ImGui.TableNextColumn();
-                ImGui.TextColored(ImGuiColors.DalamudRed, UntradableString);
-            }
-            else if(currentValue.HasValue)
-            {
-                base.DoDraw(item, currentValue, rowIndex, filterConfiguration, columnConfiguration);
-                ImGui.SameLine();
-                if (ImGui.SmallButton("R##" + rowIndex))
+                if (ImGui.TableGetColumnFlags().HasFlag(ImGuiTableColumnFlags.IsEnabled))
                 {
-                    var activeCharacter = _characterMonitor.ActiveCharacter;
-                    if (activeCharacter != null)
-                    {
-                        return new List<MessageBase> {new MarketRequestItemUpdateMessage(item.ItemId)};
-                    }
+                    ImGui.TextColored(ImGuiColors.DalamudRed, UntradableString);
                 }
             }
             else

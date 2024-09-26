@@ -16,6 +16,7 @@ public class ColumnConfiguration
     private string _key;
     private string? _name;
     private string? _exportName;
+    private bool _hiddenImGui;
     
     public bool IsDirty { get; set; }
 

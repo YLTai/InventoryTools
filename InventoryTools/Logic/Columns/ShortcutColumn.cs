@@ -48,22 +48,26 @@ namespace InventoryTools.Logic.Columns
             InventoryItem item, int rowIndex, int columnIndex)
         {
             ImGui.TableNextColumn();
-            if (ImGui.SmallButton("GT##GT" + rowIndex))
+            if (ImGui.TableGetColumnFlags().HasFlag(ImGuiTableColumnFlags.IsEnabled))
             {
-                $"https://www.garlandtools.org/db/#item/{item.Item.GarlandToolsId}".OpenBrowser();
-            }
-            if (item.Item.CanTryOn)
-            {
-                ImGui.SameLine();
-                if (ImGui.SmallButton("Try On##TO" + rowIndex))
+                if (ImGui.SmallButton("GT##GT" + rowIndex))
                 {
-                    if (_tryOn.CanUseTryOn)
+                    $"https://www.garlandtools.org/db/#item/{item.Item.GarlandToolsId}".OpenBrowser();
+                }
+
+                if (item.Item.CanTryOn)
+                {
+                    ImGui.SameLine();
+                    if (ImGui.SmallButton("Try On##TO" + rowIndex))
                     {
-                        _tryOn.TryOnItem(item.Item, 0, item.IsHQ);
-                    }
-                    else
-                    {
-                        Logger.LogError("Something went wrong while attempting to try on " + item.Item.NameString);
+                        if (_tryOn.CanUseTryOn)
+                        {
+                            _tryOn.TryOnItem(item.Item, 0, item.IsHQ);
+                        }
+                        else
+                        {
+                            Logger.LogError("Something went wrong while attempting to try on " + item.Item.NameString);
+                        }
                     }
                 }
             }
@@ -83,22 +87,26 @@ namespace InventoryTools.Logic.Columns
             ItemEx item, int rowIndex, int columnIndex)
         {
             ImGui.TableNextColumn();
-            if (ImGui.SmallButton("G##G"+rowIndex))
+            if (ImGui.TableGetColumnFlags().HasFlag(ImGuiTableColumnFlags.IsEnabled))
             {
-                $"https://www.garlandtools.org/db/#item/{item.GarlandToolsId}".OpenBrowser();
-            }
-            if (item.CanTryOn)
-            {
-                ImGui.SameLine();
-                if (ImGui.SmallButton("Try On##TO" + rowIndex))
+                if (ImGui.SmallButton("G##G" + rowIndex))
                 {
-                    if (_tryOn.CanUseTryOn)
+                    $"https://www.garlandtools.org/db/#item/{item.GarlandToolsId}".OpenBrowser();
+                }
+
+                if (item.CanTryOn)
+                {
+                    ImGui.SameLine();
+                    if (ImGui.SmallButton("Try On##TO" + rowIndex))
                     {
-                        _tryOn.TryOnItem(item, 0, false);
-                    }
-                    else
-                    {
-                        Logger.LogError("Something went wrong while attempting to try on " + item.NameString);
+                        if (_tryOn.CanUseTryOn)
+                        {
+                            _tryOn.TryOnItem(item, 0, false);
+                        }
+                        else
+                        {
+                            Logger.LogError("Something went wrong while attempting to try on " + item.NameString);
+                        }
                     }
                 }
             }

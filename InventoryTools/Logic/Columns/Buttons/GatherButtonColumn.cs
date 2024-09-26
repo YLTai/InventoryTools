@@ -23,7 +23,9 @@ public class GatherButtonColumn : ButtonColumn
         ItemEx item, int rowIndex, int columnIndex)
     {
         ImGui.TableNextColumn();
-        if (ImGui.Button("Gather"))
+        if (!ImGui.TableGetColumnFlags().HasFlag(ImGuiTableColumnFlags.IsEnabled)) return null;
+        
+        if (ImGui.Button("Gather##" + rowIndex + "_" + columnIndex))
         {
             if (item.ObtainedFishing)
             {
