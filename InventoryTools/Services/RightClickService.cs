@@ -247,7 +247,7 @@ public class RightClickService
         ImGui.Separator();
         if (ImGui.Selectable("Open in FFXIV-CN HuijiWiki"))
         {
-            $"https://ff14.huijiwiki.com/wiki/%E7%89%A9%E5%93%81:{HttpUtility.UrlEncode(name)}".OpenBrowser();
+            $"https://ff14.huijiwiki.com/wiki/%E7%89%A9%E5%93%81:{HttpUtility.UrlEncode(item.NameString)}".OpenBrowser();
         }
         if (ImGui.Selectable("Open in Garland Tools"))
         {
